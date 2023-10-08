@@ -219,7 +219,6 @@ protected:
 //                       FUNCTIONS 
 //=========================================================================
 
-protected:
 	/*Interaction Functions */
 
 
@@ -240,7 +239,7 @@ protected:
 
 		void Interact(); // Action of Interacting 
 
-
+		void ToggleMenu();
 public:
 
 	ACPlayer();

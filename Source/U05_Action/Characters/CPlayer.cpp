@@ -169,6 +169,7 @@ void ACPlayer::BeginPlay()
 	Inventory.SetNum(4);
 	CurrentInteractable = nullptr;
 
+	/*Get my HUD*/
 	HUD = Cast<ACHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 
@@ -394,6 +395,8 @@ void ACPlayer::Interact()
 
 
 
+
+
 void ACPlayer::UpdateInteractionWidget() const
 {
 	/*do a check ,interaction segment */
@@ -431,6 +434,10 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("InterActive", EInputEvent::IE_Released, this, &ACPlayer::EndInteract);
 	// Toggle Inventory key = i
 	PlayerInputComponent->BindAction("ToggleInventory", EInputEvent::IE_Pressed, this, &ACPlayer::ToggleInventory);
+
+	PlayerInputComponent->BindAction("ToggleMenu", EInputEvent::IE_Pressed, this, &ACPlayer::ToggleMenu);
+
+
 
 	PlayerInputComponent->BindAction("Avoid", EInputEvent::IE_Pressed, this, &ACPlayer::OnAvoid);
 	PlayerInputComponent->BindAction("Fist", EInputEvent::IE_Pressed, this, &ACPlayer::OnFist);
@@ -494,6 +501,13 @@ void ACPlayer::OnVerticalLook(float InAxis)
 {
 	float rate = Option->GetVerticalLookRate();
 	AddControllerPitchInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
+}
+
+void ACPlayer::ToggleMenu() 
+{
+	HUD->ToggleMenu();
+
+
 }
 
 
