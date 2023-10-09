@@ -12,11 +12,12 @@
 
 void UInventoryItemSlot::NativeOnInitialized()
 {
-	//Super::NativeOnInitialized();
+	Super::NativeOnInitialized();
 	if (ToolTipClass)
 	{
 		UInventoryTooltip* ToolTip = CreateWidget<UInventoryTooltip>(this, ToolTipClass);
-		//ToolTip->InventorySlotBeingHovered = this;
+		ToolTip->InventorySlotBeingHobered = this;
+		
 		SetToolTip(ToolTip);
 	}
 
@@ -25,7 +26,7 @@ void UInventoryItemSlot::NativeOnInitialized()
 }
 void UInventoryItemSlot::NativeConstruct()
 {
-	//Super::NativeConstruct();
+	Super::NativeConstruct();
 
 	if (ItemReference)
 	{
@@ -59,7 +60,8 @@ void UInventoryItemSlot::NativeConstruct()
 		}
 		else
 		{
-			ItemQuanity->SetVisiblity(ESlateVisibility::Collapsed);
+			ItemQuanity->SetVisibility(ESlateVisibility::Collapsed);
+
 		}
 
 	}
@@ -68,21 +70,20 @@ void UInventoryItemSlot::NativeConstruct()
 
 }
 
-
-FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	return FReply();
+	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-}
-
-void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 }
 
-bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+}
+
+bool UInventoryItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	return false;
 }

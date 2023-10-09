@@ -29,10 +29,10 @@ public:
 	UTextBlock* ItemType;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* DamageValue;
+	UTextBlock* ModifierType;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* ArmorRating;
+	UTextBlock* ModifierValue;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* UsageText;
@@ -41,7 +41,7 @@ public:
 	UTextBlock* ItemDescription;
 
 	UPROPERTY(meta = (BindWidget))
-	UTextBlock* StackSizeText;
+	UTextBlock* MaxStackSize;
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* SellValue;
@@ -52,7 +52,7 @@ public:
 
 protected:
 
-	virtual void NativeConstruct();
+	virtual void NativeConstruct() override;
 
 
 

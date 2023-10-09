@@ -62,7 +62,7 @@ void UInventoryPanel::RefreshInventory()
 			UInventoryItemSlot* ItemSlot = CreateWidget<UInventoryItemSlot>(this, InvnetorySlotClass);
 			//UInventoryItemSlot::StaticClass() ; only can use in c++ , we want graphical stuff
 
-			ItemSlot->SetItemReferecne(InventoryItem);
+			ItemSlot->SetItemReference(InventoryItem);
 			InventoryPanel->AddChildToWrapBox(ItemSlot);
 		}
 	}
