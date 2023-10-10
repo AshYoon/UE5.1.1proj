@@ -27,14 +27,14 @@ public:
 	void RefreshInventory(); 
 
 
-
+	/*make editor declare in C++ medatory to be in the bp or else it will not compile */
 	UPROPERTY(meta=(BindWidget))
 	UWrapBox* InventoryPanel;
 	
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	UTextBlock* WeightInfo;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta=(BindWidget))
 	UTextBlock* CapacityInfo;
 
 	UPROPERTY()
