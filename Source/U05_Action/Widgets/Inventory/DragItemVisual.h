@@ -21,7 +21,7 @@ class U05_ACTION_API UDragItemVisual : public UUserWidget
 
 
 
-protected:
+public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Drag Item Visual", meta = (BindWidget))
 	UBorder* ItemBorder;				  

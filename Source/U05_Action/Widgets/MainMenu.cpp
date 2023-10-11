@@ -2,6 +2,7 @@
 
 
 #include "Widgets/MainMenu.h"
+#include "Items/ItemBase.h"
 #include "Widgets/Inventory/ItemDragDropOperation.h"
 #include "Characters/CPlayer.h"
 
@@ -25,11 +26,20 @@ void UMainMenu::NativeConstruct()
 
 bool UMainMenu::NativeOnDrop(const FGeometry & InGeometry, const FDragDropEvent & InDragDropEvent, UDragDropOperation * InOperation)
 {
-	return Super::NativeOnDrop(InGeometry,InDragDropEvent,InOperation);
+
 
 	// cast operation to item dragdrop , ensure player is valid , call drop item on player 
 
 	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
 
+	
+
+	if (PlayerCharacter && ItemDragDrop->SourceItem)
+	{
+		PlayerCharacter->DropItem(ItemDragDrop->SourceItem, ItemDragDrop->SourceItem->Quanity);
+		return true;
+
+	}
+	return false;
 
 }

@@ -4,7 +4,8 @@
 #include "Widgets/Inventory/InventoryItemSlot.h"
 #include "Widgets/Inventory/InventoryTooltip.h"
 #include "Items/ItemBase.h"
-
+#include "Widgets/Inventory/DragItemVisual.h"
+#include "WIdgets/Inventory/ItemDragDropOperation.h"
 /*Game*/
 #include "Components/Border.h"
 #include "Components/Image.h"
@@ -70,9 +71,28 @@ void UInventoryItemSlot::NativeConstruct()
 
 }
 
+
+
+
+
 FReply UInventoryItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	FReply Reply = Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	{
+		// take widget just return reference of the unerlying widget 
+		/*if we hold or not move it , this won't fire */
+		return Reply.Handled().DetectDrag(TakeWidget(), EKeys::LeftMouseButton);
+	}
+
+
+	// submenu on right click will happen here 
+
+	return Reply.Unhandled();
+
+
+
 }
 
 void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -81,6 +101,35 @@ void UInventoryItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
 {
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+
+	/* this only detected when mouse is dragging , 
+	we need native on mouse button down in order to detect that we are left clicking  */
+
+	if (DragItemVisualClass)
+	{
+		/*must use TObjectPtr in this , cause this widget is TObjectpointer and what we made is just DragItemVisual pointer*/
+		const TObjectPtr<UDragItemVisual> DragVisual = CreateWidget<UDragItemVisual>(this, DragItemVisualClass);
+		DragVisual->ItemIcon->SetBrushFromTexture(ItemReference->AssetData.Icon);
+		DragVisual->ItemBorder->SetBrushColor(ItemBorder->GetBrushColor());
+		DragVisual->ItemQuanity->SetText(FText::AsNumber(ItemReference->Quanity));
+
+		/* this is data side , allow to carry data , just create in memory*/
+		UItemDragDropOperation* DragItemOperation = NewObject<UItemDragDropOperation>();
+		DragItemOperation->SourceItem = ItemReference;
+		DragItemOperation->SourceInventory = ItemReference->OwningInventory;
+
+
+		/*must use TObjectPtr in this , cause this widget is TObjectpointer and what we made is just DragItemVisual pointer*/
+		DragItemOperation->DefaultDragVisual = DragVisual;
+		DragItemOperation->Pivot = EDragPivot::TopLeft;
+
+		/*  */
+		OutOperation = DragItemOperation;
+
+	}
+
+
 }
 
 bool UInventoryItemSlot::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)

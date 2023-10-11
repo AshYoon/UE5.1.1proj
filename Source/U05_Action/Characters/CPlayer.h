@@ -19,7 +19,7 @@ InteractionDataStruct - info of Interaction
 */
 class ACHUD;
 class UCInventoryComponent;
-
+class UItemBase;
 
 USTRUCT()
 struct FInteractionData
