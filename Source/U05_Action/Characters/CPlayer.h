@@ -127,6 +127,10 @@ public:
 
 	void UpdateInteractionWidget() const;
 
+	void DropItem(UItemBase* ItemToDrop, const int32 QuanityToDrop);
+
+
+
 	// the players help Text
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "HUD")
 	FString HelpText;

@@ -29,7 +29,7 @@ public:
 
 	/*make editor declare in C++ medatory to be in the bp or else it will not compile */
 	UPROPERTY(meta=(BindWidget))
-	UWrapBox* InventoryPanel;
+	UWrapBox* InventoryWarpBox;
 	
 	UPROPERTY(meta=(BindWidget))
 	UTextBlock* WeightInfo;

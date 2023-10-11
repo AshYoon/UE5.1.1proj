@@ -11,7 +11,7 @@
 #include "Components/CMontagesComponent.h"
 #include "Components/CInventoryComponent.h"
 #include "Components/CFeetComponent.h"
-
+#include "World/CPickup.h"
 #include "Widgets/CUserWidget_ActionList.h"
 /* Engine Stuff */
 #include "GameFramework/SpringArmComponent.h"
@@ -408,6 +408,54 @@ void ACPlayer::UpdateInteractionWidget() const
 
 
 
+void ACPlayer::ToggleMenu()
+{
+	HUD->ToggleMenu();
+
+
+}
+
+
+
+void ACPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuanityToDrop)
+{
+	/*Safety Check for Item is valid*/
+	if (PlayerInventory->FindMathingItem(ItemToDrop))
+	{
+		/*this is a struct containing different things you can set for spawning a new actor into world*/
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		/* Determines whether spawning will not fail if certain conditions are not met. */
+		SpawnParams.bNoFail = true;
+		//always spawn item 스폰될 장소가 방해받더라도 always spawn 
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		//spawn location 
+		const FVector SpawnLocation{ GetActorLocation() + (GetActorForwardVector() * 50.0f) };
+
+		/* third param will be size*/
+		const FTransform SpawnTransform(GetActorRotation(), SpawnLocation);
+
+		const int32 RemoveQuanity = PlayerInventory->RemoveAmountOfItem(ItemToDrop, QuanityToDrop);
+
+
+		/*C++ object를 먼저 만들고 pickup initialize를 통해서 data table 기반으로 actor를 생성하기때문에 여기서는
+		pickup을 만들때 static Class로 만들어도 문제가 없다 */
+		ACPickup* Pickup = GetWorld()->SpawnActor<ACPickup>(ACPickup::StaticClass(), SpawnTransform, SpawnParams);
+
+		/*이부분에서 ItemDataTable을 pickup에 Set할수있는 방법을 알수없어서 BP에서 나머지를 세팅해줘야할거같다 */
+		Pickup->InitializeDrop(ItemToDrop,RemoveQuanity);
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somhow null"));
+	}
+
+
+
+}
+
 
 
 
@@ -503,12 +551,6 @@ void ACPlayer::OnVerticalLook(float InAxis)
 	AddControllerPitchInput(InAxis * rate * GetWorld()->GetDeltaSeconds());
 }
 
-void ACPlayer::ToggleMenu() 
-{
-	HUD->ToggleMenu();
-
-
-}
 
 
 void ACPlayer::OnZoom(float InAxis)

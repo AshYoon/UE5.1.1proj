@@ -33,15 +33,26 @@ void UInventoryPanel::NativeOnInitialized()
 
 void UInventoryPanel::SetInfoText() const
 {
-	WeightInfo->SetText(FText::Format(FText::FromString("{0}/{1}")
-		, InventoryReference->GetInventoryTotalWeight(),
-		InventoryReference->GetWeightCapacity()));
+	//WeightInfo->SetText(FText::Format(FText::FromString("{0}/{1}")
+	//	, InventoryReference->GetInventoryTotalWeight(),
+	//	InventoryReference->GetWeightCapacity()));
 
-	CapacityInfo->SetText(FText::Format(FText::FromString("{0}/{1}"),
-		InventoryReference->GetInventoryContents().Num(),
-		InventoryReference->GetSlotsCapacity()));
+	//CapacityInfo->SetText(FText::Format(FText::FromString("{0}/{1}"),
+	//	InventoryReference->GetInventoryContents().Num(),
+	//	InventoryReference->GetSlotsCapacity()));
 
+	/* float 을 강제로 int 로 변환하는 부분 수정 */
 
+	const FString WeightInfoValue{
+		FString::SanitizeFloat(InventoryReference->GetInventoryTotalWeight()) + "/"
+		+ FString::SanitizeFloat(InventoryReference->GetWeightCapacity()) };
+
+	const FString CapacityInfoValue{
+		FString::FromInt(InventoryReference->GetInventoryContents().Num()) + "/"
+		+ FString::FromInt(InventoryReference->GetSlotsCapacity()) };
+
+	WeightInfo->SetText(FText::FromString(WeightInfoValue));
+	CapacityInfo->SetText(FText::FromString(CapacityInfoValue));
 
 
 }
@@ -54,7 +65,7 @@ void UInventoryPanel::RefreshInventory()
 		// clear the inventory ,
 		//we want it to give the appearance of only showing the most up to date picture of inventory 
 		// before we add everything
-		InventoryPanel->ClearChildren();
+		InventoryWarpBox->ClearChildren();
 
 		//iterate inventoryreference
 		for (UItemBase* const& InventoryItem : InventoryReference->GetInventoryContents())
@@ -63,7 +74,7 @@ void UInventoryPanel::RefreshInventory()
 			//UInventoryItemSlot::StaticClass() ; only can use in c++ , we want graphical stuff
 
 			ItemSlot->SetItemReference(InventoryItem);
-			InventoryPanel->AddChildToWrapBox(ItemSlot);
+			InventoryWarpBox->AddChildToWrapBox(ItemSlot);
 		}
 
 

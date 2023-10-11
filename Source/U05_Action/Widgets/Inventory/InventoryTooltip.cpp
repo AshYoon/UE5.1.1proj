@@ -121,16 +121,25 @@ void UInventoryTooltip::NativeConstruct()
 	UsageText->SetText(ItemBeingHovered->ItemTextData.UsageText);
 	//SellValue->SetText(FText::AsNumber(ItemBeingHovered->ItemStatisics.SellValue));
 	ItemDescription->SetText(ItemBeingHovered->ItemTextData.Description);
-	StackWeight->SetText(FText::AsNumber(ItemBeingHovered->GetItemStackWeight()));
+
+
+
+	// Weight은 float 으로 설정되었지만 변환과정에서 소수점이 탈락되는부분 수정 
+	const FString WeightInfo =
+	{ "Weight : " + FString::SanitizeFloat(ItemBeingHovered->GetItemStackWeight()) };
+
+	StackWeight->SetText(FText::FromString(WeightInfo));
 
 	if (ItemBeingHovered->NumbericData.bIsStackable)
 	{
-		MaxStackSize->SetText(FText::AsNumber(ItemBeingHovered->NumbericData.MaxStackSize));
+		const FString StackInfo =
+		{ "Max stack size : " + FString::FromInt(ItemBeingHovered->NumbericData.MaxStackSize) };
+
+		MaxStackSize->SetText(FText::FromString(StackInfo));
 	}
 	else
 	{
 		MaxStackSize->SetVisibility(ESlateVisibility::Collapsed);
-		MaxStackSizeText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 
