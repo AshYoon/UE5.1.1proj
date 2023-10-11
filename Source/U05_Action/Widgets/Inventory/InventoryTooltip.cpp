@@ -20,7 +20,7 @@ void UInventoryTooltip::NativeConstruct()
 		break;
 	case EItemType::Consumable:
 		ItemType->SetText(FText::FromString("Consumable"));
-		SellValue->SetVisibility(ESlateVisibility::Collapsed);
+		//SellValue->SetVisibility(ESlateVisibility::Collapsed);
 		//ModifierType->SetVisibility(ESlateVisibility::Collapsed);
 		//ModifierValue->SetVisibility(ESlateVisibility::Collapsed);
 		break;
@@ -29,6 +29,7 @@ void UInventoryTooltip::NativeConstruct()
 	case EItemType::Hand:
 		break;
 	case EItemType::Head:
+		ItemType->SetText(FText::FromString("Head"));
 		break;
 	case EItemType::Legs:
 		break;
@@ -39,10 +40,12 @@ void UInventoryTooltip::NativeConstruct()
 		UsageText->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 	case EItemType::MeleeWeapon:
+		ItemType->SetText(FText::FromString("MeleeWeapon"));
 		break;
 	case EItemType::Necklace:
 		break;
 	case EItemType::RangeWeapon:
+		ItemType->SetText(FText::FromString("RangeWeapon"));
 		break;
 	case EItemType::Quest:
 		break;
@@ -103,8 +106,8 @@ void UInventoryTooltip::NativeConstruct()
 		ModifierType->SetText(FText::FromString("MeleeAttackStaminaCost"));
 		break;
 	case EStatTypes::None:
-		ModifierType->SetVisibility(ESlateVisibility::Collapsed);
-		ModifierValue->SetVisibility(ESlateVisibility::Collapsed);
+		//ModifierType->SetVisibility(ESlateVisibility::Collapsed);
+		//ModifierValue->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 
 	default:
@@ -116,18 +119,18 @@ void UInventoryTooltip::NativeConstruct()
 	ItemName->SetText(ItemBeingHovered->ItemTextData.Name);
 	ModifierValue->SetText(FText::AsNumber(ItemBeingHovered->ItemStatisics.ModifierValue));
 	UsageText->SetText(ItemBeingHovered->ItemTextData.UsageText);
-	SellValue->SetText(FText::AsNumber(ItemBeingHovered->ItemStatisics.SellValue));
+	//SellValue->SetText(FText::AsNumber(ItemBeingHovered->ItemStatisics.SellValue));
 	ItemDescription->SetText(ItemBeingHovered->ItemTextData.Description);
 	StackWeight->SetText(FText::AsNumber(ItemBeingHovered->GetItemStackWeight()));
 
 	if (ItemBeingHovered->NumbericData.bIsStackable)
 	{
 		MaxStackSize->SetText(FText::AsNumber(ItemBeingHovered->NumbericData.MaxStackSize));
-
 	}
 	else
 	{
 		MaxStackSize->SetVisibility(ESlateVisibility::Collapsed);
+		MaxStackSizeText->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 

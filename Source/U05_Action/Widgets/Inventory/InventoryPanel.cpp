@@ -65,6 +65,10 @@ void UInventoryPanel::RefreshInventory()
 			ItemSlot->SetItemReference(InventoryItem);
 			InventoryPanel->AddChildToWrapBox(ItemSlot);
 		}
+
+
+		SetInfoText();
+
 	}
 
 

@@ -46,19 +46,19 @@ enum class EItemType : uint8
 UENUM(BlueprintType)
 enum class EStatTypes : uint8
 {
-	None,
-	Health,
-	Stamina,
-	Mana,
-	Damage,
-	Armor,
-	CritChance,
-	CritMultiplier,
-	AttackSpeed,
-	Block,
-	MeleeAttackStaminaCost,
-	MagicDamage,
-	CastingSpeed,
+	None UMETA(DisplayName = "None"),
+	Health UMETA(DisplayName = "Health"),
+	Stamina UMETA(DisplayName = "Stamina"),
+	Mana UMETA(DisplayName = "Mana"),
+	Damage UMETA(DisplayName = "Damage"),
+	Armor UMETA(DisplayName = "Armor"),
+	CritChance UMETA(DisplayName = "CritChance"),
+	CritMultiplier UMETA(DisplayName = "CritMultiplier"),
+	AttackSpeed UMETA(DisplayName = "AttackSpeed"),
+	Block UMETA(DisplayName = "Block"),
+	MeleeAttackStaminaCost UMETA(DisplayName = "MeleeAttackStaminaCost"),
+	MagicDamage UMETA(DisplayName = "MagicDamage"),
+	CastingSpeed UMETA(DisplayName = "CastingSpeed"),
 
 
 };
