@@ -5,7 +5,7 @@
 #include "Characters/CPlayer.h"
 #include "Widgets/Inventory/InventoryItemSlot.h"
 #include "Widgets/Inventory/InventoryPanel.h"
-
+#include "Widgets/Inventory/ItemDragDropOperation.h"
 //Engine
 #include "Components/WrapBox.h"
 #include "Components/TextBlock.h"
@@ -87,8 +87,18 @@ void UInventoryPanel::RefreshInventory()
 
 bool UInventoryPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
-	return Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+	
+	const UItemDragDropOperation* ItemDragDrop = Cast<UItemDragDropOperation>(InOperation);
 
+	/*if i have valid sourceItem And my inventorypanel is valid */
+	if (ItemDragDrop->SourceItem && InventoryReference)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Detected and Item Drop on InventoryPanel. "))
 
-	//return false;
+			//returning true will stop the drop operation at this widget
+		return true;
+	}
+
+	// returning false will cause the drop operation to fall through to underlying widget (if any)
+	return false;
 }

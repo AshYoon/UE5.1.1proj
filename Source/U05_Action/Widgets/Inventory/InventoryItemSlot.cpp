@@ -112,7 +112,13 @@ void UInventoryItemSlot::NativeOnDragDetected(const FGeometry& InGeometry, const
 		const TObjectPtr<UDragItemVisual> DragVisual = CreateWidget<UDragItemVisual>(this, DragItemVisualClass);
 		DragVisual->ItemIcon->SetBrushFromTexture(ItemReference->AssetData.Icon);
 		DragVisual->ItemBorder->SetBrushColor(ItemBorder->GetBrushColor());
-		DragVisual->ItemQuanity->SetText(FText::AsNumber(ItemReference->Quanity));
+
+		/*check if item is stackable -> show itemquanity else collapsed*/
+		ItemReference->NumbericData.bIsStackable
+			? DragVisual->ItemQuanity->SetText(FText::AsNumber(ItemReference->Quanity))
+			: DragVisual->ItemQuanity->SetVisibility(ESlateVisibility::Collapsed);
+
+
 
 		/* this is data side , allow to carry data , just create in memory*/
 		UItemDragDropOperation* DragItemOperation = NewObject<UItemDragDropOperation>();

@@ -116,7 +116,8 @@ struct FItemNumericData
 	UPROPERTY(EditAnywhere)
 	int32 MaxStackSize;
 
-	UPROPERTY(EditAnywhere)
+	//doesn't need to edit this cause we have maxStacksize
+	UPROPERTY()
 	bool bIsStackable;
 
 };

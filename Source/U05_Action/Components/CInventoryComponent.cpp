@@ -189,7 +189,7 @@ int32 UCInventoryComponent::HandleStackableItems(UItemBase *ItemIn, int32 Reques
 	if (RequestedAddAmount <= 0 || FMath::IsNearlyZero(ItemIn->GetItemStackWeight()))
 	{
 		//invalid item data 
-		return;
+		return 0;
 	}
 
 
@@ -224,15 +224,16 @@ int32 UCInventoryComponent::HandleStackableItems(UItemBase *ItemIn, int32 Reques
 
 			ItemIn->SetQuanity(AmountToDistribute);
 
-
-			// TODO: refine this logic since going over weight capacity should not ever be possible
 			//if max capacity is reached , no need to run the loop again
-			if (InventoryTotalWeight >= InventoryWeightCapacity)
+			if (InventoryTotalWeight + ExistingItemStack->GetItemSingleWeight() > InventoryWeightCapacity)
 			{
 				OnInventoryUpdated.Broadcast();
 				//return what we added
 				return RequestedAddAmount - AmountToDistribute;
 			}
+
+
+
 		}
 		else if (WeightLimitAddAmount <= 0)
 		{
@@ -247,7 +248,7 @@ int32 UCInventoryComponent::HandleStackableItems(UItemBase *ItemIn, int32 Reques
 				return RequestedAddAmount - AmountToDistribute;
 			}
 
-			
+			//reached if there is a partial stack but none of it can be added at all 
 			return 0;
 		}
 
@@ -299,11 +300,15 @@ int32 UCInventoryComponent::HandleStackableItems(UItemBase *ItemIn, int32 Reques
 			return RequestedAddAmount;
 
 		}
+
+		// reached if there is free item slots , but no remaining weight capacity 
+		return RequestedAddAmount - AmountToDistribute;
+
 	}
 
-
-	OnInventoryUpdated.Broadcast();
-	return RequestedAddAmount - AmountToDistribute;
+	// can only be reached if there is no existing stack and no extra capacity slots
+;
+	return 0;
 }
 
 FItemAddResult UCInventoryComponent::HandleAddItem(UItemBase * InputItem)
@@ -313,7 +318,7 @@ FItemAddResult UCInventoryComponent::HandleAddItem(UItemBase * InputItem)
 			const int32 InitialRequestedAddAmount = InputItem->Quanity;
 
 			/*for nonStackable item */
-			if (InputItem->NumbericData.bIsStackable)
+			if (!InputItem->NumbericData.bIsStackable)
 			{
 					return HandleNonStackableItem(InputItem );
 			}
