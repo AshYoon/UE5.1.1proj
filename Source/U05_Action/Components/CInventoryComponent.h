@@ -7,6 +7,8 @@
 class UItemBase;
 /*this type of delegate will now will be valid for use */
 DECLARE_MULTICAST_DELEGATE(FOnInventoryUpdated);
+class ACPlayer;
+
 
 /*to describes add result */
 UENUM(BlueprintType)
@@ -182,9 +184,10 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, Category = "Inventory")
 	float InventoryWeightCapacity;
+
+	UPROPERTY()
+	ACPlayer* PlayerCharacter;
 	
-	UPROPERTY(EditInstanceOnly, Category = "InventroyIDETest")
-	UItemBase* InventoryIDETest;
 	//=========================================================================
 	//                       FUNCTIONS 
 	//=========================================================================

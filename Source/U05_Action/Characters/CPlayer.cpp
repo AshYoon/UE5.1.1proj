@@ -11,6 +11,7 @@
 #include "Components/CMontagesComponent.h"
 #include "Components/CInventoryComponent.h"
 #include "Components/CFeetComponent.h"
+#include "Components/CEquipmentComponent.h"
 #include "World/CPickup.h"
 #include "Widgets/CUserWidget_ActionList.h"
 /* Engine Stuff */
@@ -151,7 +152,8 @@ void ACPlayer::BeginPlay()
 	// 키를 눌렀을때 AddToViewPort로 화면에 생성 
 
 
-	// 눌러서 바로 넘어간다 
+	// 눌러서 바로 넘어간다 , 
+	//TODO : EquipmentComponent에 따라서 AddDynamic으로 Player의 상태 변경 및 함수실행 
 	ActionList->GetData(0).OnUserWidget_ActionItem_Clicked.AddDynamic(this, &ACPlayer::OnFist);
 	ActionList->GetData(1).OnUserWidget_ActionItem_Clicked.AddDynamic(this, &ACPlayer::OnOneHand);
 	ActionList->GetData(2).OnUserWidget_ActionItem_Clicked.AddDynamic(this, &ACPlayer::OnTwoHand);
@@ -159,6 +161,7 @@ void ACPlayer::BeginPlay()
 	ActionList->GetData(4).OnUserWidget_ActionItem_Clicked.AddDynamic(this, &ACPlayer::OnFireStorm);
 	ActionList->GetData(5).OnUserWidget_ActionItem_Clicked.AddDynamic(this, &ACPlayer::OnIceBall);
 
+	//foot audioComponent와 Foot Sound Cue가 valid면 SetSound 
 	if (FootAudioComponent && FootSoundCue)
 	{
 		FootAudioComponent->SetSound(FootSoundCue);

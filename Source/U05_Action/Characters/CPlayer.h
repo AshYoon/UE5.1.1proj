@@ -20,6 +20,7 @@ InteractionDataStruct - info of Interaction
 class ACHUD;
 class UCInventoryComponent;
 class UItemBase;
+class UCEquipmentComponent;
 
 USTRUCT()
 struct FInteractionData
@@ -202,6 +203,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Character | Inventory")
 	UCInventoryComponent* PlayerInventory;
+
+	UPROPERTY(VisibleAnywhere, Category = "Character | Equipment")
+	UCEquipmentComponent* PlayerEquipment;
 
 	float InteractionCheckFrequency;
 	
