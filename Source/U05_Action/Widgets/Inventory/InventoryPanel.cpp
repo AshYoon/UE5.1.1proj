@@ -4,7 +4,6 @@
 #include "Widgets/Inventory/InventoryPanel.h"
 #include "Characters/CPlayer.h"
 #include "Widgets/Inventory/InventoryItemSlot.h"
-#include "Widgets/Inventory/InventoryPanel.h"
 #include "Widgets/Inventory/ItemDragDropOperation.h"
 //Engine
 #include "Components/WrapBox.h"

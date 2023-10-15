@@ -52,6 +52,9 @@ public:
 	UFUNCTION(Category = "Equipment")
 	FItemAddResult FindNextItemByItemType(UItemBase* ItemIn);
 
+	UFUNCTION(Category = "Equipment")
+	FORCEINLINE TArray<UItemBase*> GetEquipmentContents() const { return EquipmentContents; };
+
 
 private:
 
@@ -74,7 +77,7 @@ protected:
 	//                       PROPERTIES & VARIABLES
 	//=========================================================================
 	/*TArray 를 통해 관리하는게 가독성과 maintenance 부분에서 더 효율적일듯함  */
-	UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, Category = "Equipment")
 	TArray<TObjectPtr<UItemBase>> EquipmentContents;
 
 
@@ -86,5 +89,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void SwitchItem(UItemBase* ItemInput , UItemBase* ItemToRemove);
+
+	void ApplyStat();
 		
 };

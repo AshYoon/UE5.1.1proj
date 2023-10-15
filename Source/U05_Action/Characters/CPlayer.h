@@ -125,6 +125,7 @@ private:
 public:
 	FORCEINLINE class UCUserWidget_ActionList* GetActionList() { return ActionList; };
 	FORCEINLINE UCInventoryComponent* GetInventory() const { return PlayerInventory; };
+	FORCEINLINE UCEquipmentComponent* GetEquipment() const { return PlayerEquipment; };
 
 	void UpdateInteractionWidget() const;
 
