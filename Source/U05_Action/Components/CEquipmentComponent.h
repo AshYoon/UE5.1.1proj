@@ -58,6 +58,8 @@ public:
 	UFUNCTION(Category = "Equipment")
 	FORCEINLINE TArray<UItemBase*> GetEquipmentContents() const { return EquipmentContents; };
 
+	UFUNCTION(Category = "Equipment")
+	bool IsTypeValid(EItemType ItemType);
 
 
 private:

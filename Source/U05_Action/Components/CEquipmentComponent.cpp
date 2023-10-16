@@ -124,6 +124,21 @@ UItemBase* UCEquipmentComponent::SameTypeValid(UItemBase* ItemIn)
 	return nullptr;
 }
 
+bool UCEquipmentComponent::IsTypeValid(EItemType ItemType)
+{
+	for (UItemBase* const& EquipmentItem : EquipmentContents)
+	{
+		if (EquipmentItem->GetItemType() == ItemType)
+		{
+			return true;
+		}
+	}
+
+
+
+	return false;
+}
+
 void UCEquipmentComponent::SwitchItem(UItemBase* ItemInput, UItemBase* ItemToRemove)
 {
 

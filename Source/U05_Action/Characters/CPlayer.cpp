@@ -552,6 +552,24 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void ACPlayer::SetBattleMode()
+{
+	if (GetEquipment())
+	{
+
+		if (GetEquipment()->IsTypeValid(EItemType::MeleeWeapon))
+		{
+			OnOneHand();
+		}
+		else if (GetEquipment()->IsTypeValid(EItemType::RangeWeapon))
+		{
+			OnIceBall();
+		}
+	}
+
+}
+
+
 // 음수 양수에 따라서 좌우 앞뒤가 생기니깐 그걸로 판단 
 void ACPlayer::OnMoveForward(float InAxis)
 {

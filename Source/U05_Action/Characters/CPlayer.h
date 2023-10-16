@@ -126,6 +126,8 @@ public:
 	FORCEINLINE class UCUserWidget_ActionList* GetActionList() { return ActionList; };
 	FORCEINLINE UCInventoryComponent* GetInventory() const { return PlayerInventory; };
 	FORCEINLINE UCEquipmentComponent* GetEquipment() const { return PlayerEquipment; };
+	FORCEINLINE UCStatusComponent* GetStatus() const { return Status; };
+
 
 	void UpdateInteractionWidget() const;
 
@@ -249,6 +251,9 @@ protected:
 		void Interact(); // Action of Interacting 
 
 		void ToggleMenu();
+
+
+		void SetBattleMode();
 public:
 
 	ACPlayer();
