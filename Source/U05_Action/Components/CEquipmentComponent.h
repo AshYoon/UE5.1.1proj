@@ -52,6 +52,9 @@ public:
 	UFUNCTION(Category = "Equipment")
 	FItemAddResult FindNextItemByItemType(UItemBase* ItemIn);
 
+	UFUNCTION(Category = "Equipemt")
+	UItemBase* SameTypeValid(UItemBase* ItemIn);
+
 	UFUNCTION(Category = "Equipment")
 	FORCEINLINE TArray<UItemBase*> GetEquipmentContents() const { return EquipmentContents; };
 

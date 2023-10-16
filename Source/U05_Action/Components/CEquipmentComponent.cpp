@@ -37,7 +37,7 @@ void UCEquipmentComponent::RemoveSingleInstanceOfItem(UItemBase* ItemToRemove)
 
 FItemAddResult UCEquipmentComponent::HandleAddItem(UItemBase* InputItem)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HandleAddItemCalled"));
+
 
 	//TODO - if Equipment Contents에 같은타입의 다른 아이템이있을겨우 교체 
 	// 다른아이템이 없을경우 장착 
@@ -50,11 +50,35 @@ FItemAddResult UCEquipmentComponent::HandleAddItem(UItemBase* InputItem)
 		UE_LOG(LogTemp, Warning, TEXT("Input item is somehownull"));
 	}
 
-	if (!InputItem->NumbericData.bIsStackable)
+	/* if maxstacksize is over 1 , it is not Equipable item */
+	if (InputItem->NumbericData.MaxStackSize > 1)
 	{
+		//지금 여기로 들어오는거보니 isStackable이 true로 설정되어있다 
+
 		return FItemAddResult::AddedNone(FText::Format(
 			FText::FromString("Couldn't added {0} to the Equipment.invalid item."),
 			InputItem->ItemTextData.Name));
+	}
+
+	// if Equipmentcontents already have this item 
+	if (FindMathingItem(InputItem))
+	{
+
+		UE_LOG(LogTemp, Warning, TEXT("Input item is already Equipped"));
+
+		return FItemAddResult::AddedNone(FText::Format(
+			FText::FromString("Couldn't added {0} to the Equipment.already Equipped."),
+			InputItem->ItemTextData.Name));
+	}
+
+	if (SameTypeValid(InputItem))
+	{
+		SwitchItem(InputItem, SameTypeValid(InputItem));
+
+
+		return FItemAddResult::AddedPartial(1, FText::Format(FText::FromString(
+			"Successfully added a {0} to the Equipment and chagne with {1} . "), 
+			InputItem->ItemTextData.Name , SameTypeValid(InputItem)->ItemTextData.Name));
 	}
 
 
@@ -85,7 +109,20 @@ FItemAddResult UCEquipmentComponent::FindNextItemByItemType(UItemBase* ItemIn)
 	return FItemAddResult();
 }
 
+UItemBase* UCEquipmentComponent::SameTypeValid(UItemBase* ItemIn)
+{
+	if (ItemIn)
+	{
+		for (UItemBase* const& EquipmentItem : EquipmentContents)
+		{
+			// is EquipmentContents have sameType Item of ItemIn , it will return Item
+			if (EquipmentItem->GetItemType() == ItemIn->GetItemType())
+				return EquipmentItem;
+		}
+	}
 
+	return nullptr;
+}
 
 void UCEquipmentComponent::SwitchItem(UItemBase* ItemInput, UItemBase* ItemToRemove)
 {
@@ -102,7 +139,7 @@ void UCEquipmentComponent::ApplyStat()
 void UCEquipmentComponent::AddNewItem(UItemBase* Item)
 {
 	/* all the items are pointer , */
-
+	UE_LOG(LogTemp, Warning, TEXT("Add New Item Called"));
 	UItemBase* NewItem;
 
 	//some checks 
@@ -122,13 +159,13 @@ void UCEquipmentComponent::AddNewItem(UItemBase* Item)
 	}
 
 	//NewItem->OwningInventory = this;
-
+	NewItem->OwningEquipment = this;
 	EquipmentContents.Add(NewItem);
 
 	/* it could be stack */
 	OnEquipmentUpdated.Broadcast();
 
-	UE_LOG(LogTemp, Warning, TEXT("Add New Item Called"));
+
 }
 
 

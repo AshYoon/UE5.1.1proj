@@ -9,7 +9,7 @@
 #include "ItemBase.generated.h"
 
 class UCInventoryComponent;
-
+class UCEquipmentComponent;
 /**
  * 
  */
@@ -27,6 +27,9 @@ public:
 	// manage with setter 
 	UPROPERTY()
 	UCInventoryComponent* OwningInventory;
+
+	UPROPERTY()
+		UCEquipmentComponent* OwningEquipment;
 
 
 

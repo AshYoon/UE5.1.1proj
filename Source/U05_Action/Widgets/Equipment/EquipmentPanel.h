@@ -6,8 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "EquipmentPanel.generated.h"
 
-
+class UInventoryItemSlot;
 class UEquipmentSlot;
+class UCInventoryComponent;
 class UCEquipmentComponent;
 class ACPlayer;
 class UTextBlock;
@@ -56,7 +57,14 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<UEquipmentSlot> EquipmentSlotClass;
 
+	UPROPERTY()
+		UCInventoryComponent* InventoryReference;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<UInventoryItemSlot> InvnetorySlotClass;
+
 protected:
+	void SetInfoText() const;
 
 	void ClearWarpBox();
 

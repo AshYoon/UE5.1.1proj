@@ -2,13 +2,53 @@
 
 
 #include "Widgets/Equipment/EquipmentSlot.h"
+#include "Items/ItemBase.h"
+#include "WIdgets/Inventory/ItemDragDropOperation.h"
+
+/*Engine*/
+#include "Components/Border.h"
+#include "Components/Image.h"
+#include "Components/TextBlock.h"
 
 void UEquipmentSlot::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
+
 }
 
 void UEquipmentSlot::NativeConstruct()
 {
+	Super::NativeConstruct();
+
+	if (EquipmentReference)
+	{
+		switch (EquipmentReference->ItemQuality)
+		{
+		case EItemQuality::Shoddy:
+			EquipmentBorder->SetBrushColor(FLinearColor::Gray);
+			break;
+		case EItemQuality::Common:
+			EquipmentBorder->SetBrushColor(FLinearColor::White);
+			break;
+		case EItemQuality::Quality:
+			EquipmentBorder->SetBrushColor(FLinearColor::Blue);
+			break;
+		case EItemQuality::MasterWork:
+			EquipmentBorder->SetBrushColor(FLinearColor::Red);
+			break;
+		case EItemQuality::GrandMaster:
+			EquipmentBorder->SetBrushColor(FLinearColor(1.0f, 0.45f, 0.0f));
+			break;
+
+		default:
+			break;
+		}
+
+		EquipmentIcon->SetBrushFromTexture(EquipmentReference->AssetData.Icon);
+
+
+	}
 }
 
 FReply UEquipmentSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

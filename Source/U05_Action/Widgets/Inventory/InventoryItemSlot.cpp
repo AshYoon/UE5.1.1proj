@@ -14,6 +14,7 @@
 void UInventoryItemSlot::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	// ÅøÆÁ »ý¼º 
 	if (ToolTipClass)
 	{
 		UInventoryTooltip* ToolTip = CreateWidget<UInventoryTooltip>(this, ToolTipClass);

@@ -3,6 +3,7 @@
 /* Game*/
 #include "Widgets/Equipment/EquipmentPanel.h"
 #include "Widgets/Equipment/EquipmentSlot.h"
+#include "Widgets/Inventory/InventoryItemSlot.h"
 #include "Characters/CPlayer.h"
 #include "Items/ItemBase.h"
 #include "Widgets/Inventory/ItemDragDropOperation.h"
@@ -50,26 +51,70 @@ bool UEquipmentPanel::NativeOnDrop(const FGeometry& InGeometry, const FDragDropE
 
 void UEquipmentPanel::RefreshEquipment()
 {
+	
+
+
+	UEquipmentSlot* EquipmentSlot = nullptr;
+
+	if(!EquipmentSlotClass)
+		UE_LOG(LogTemp, Warning, TEXT("Detected EquipmentReference or EquipmentSlotClass invalid. "))
+
 	if (EquipmentReference && EquipmentSlotClass)
 	{
 		ClearWarpBox();
-		
 		for (UItemBase* const& EquipmentItem : EquipmentReference->GetEquipmentContents())
 		{
-			//if EquipmentItem
-			//만약 UItemBase* EquipmentItem의 ItemType이 Head라면 
-			if (EquipmentItem->GetItemType() == EItemType::Head)
+			switch (EquipmentItem->GetItemType())
 			{
-				//TODO: 추후에 Swich문으로 변경
-				UEquipmentSlot* EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+			case EItemType::Head:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
 				EquipmentSlot->SetEquipmentReference(EquipmentItem);
 				EquipmentHeadWarpBox->AddChildToWrapBox(EquipmentSlot);
+				break;
+			case EItemType::MeleeWeapon:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+				EquipmentSlot->SetEquipmentReference(EquipmentItem);
+				EquipmentWeaponWarpBox->AddChildToWrapBox(EquipmentSlot);
+				break;
+			case EItemType::Necklace:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+				EquipmentSlot->SetEquipmentReference(EquipmentItem);
+				EquipmentNecklace->AddChildToWrapBox(EquipmentSlot);
+				break;
+			case EItemType::Top:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+				EquipmentSlot->SetEquipmentReference(EquipmentItem);
+				EquipmentTopWarpBox->AddChildToWrapBox(EquipmentSlot);
+				break;
+			case EItemType::Legs:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+				EquipmentSlot->SetEquipmentReference(EquipmentItem);
+				EquipmentLegWarpBox->AddChildToWrapBox(EquipmentSlot);
+				break;
+			case EItemType::Feet:
+				EquipmentSlot = CreateWidget<UEquipmentSlot>(this, EquipmentSlotClass);
+				EquipmentSlot->SetEquipmentReference(EquipmentItem);
+				EquipmentFeetWarpBox->AddChildToWrapBox(EquipmentSlot);
+				break;
+			default:
+				break;
 			}
 
+
 		}
+
 	}
+
+
+
 }
 
+
+void UEquipmentPanel::SetInfoText() const
+{
+
+
+}
 
 void UEquipmentPanel::ClearWarpBox()
 {
