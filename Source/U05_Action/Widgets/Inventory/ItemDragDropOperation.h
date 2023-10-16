@@ -8,7 +8,7 @@
 
 class UItemBase;
 class UCInventoryComponent;
-
+class UCEquipmentComponent;
 
 /**
  * 
@@ -27,8 +27,8 @@ public:
 	UPROPERTY()
 	UCInventoryComponent* SourceInventory;
 
-
-
+	UPROPERTY()
+	UCEquipmentComponent* SourceEquipment;
 
 	
 };

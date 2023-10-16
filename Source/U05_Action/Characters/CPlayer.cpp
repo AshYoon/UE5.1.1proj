@@ -114,6 +114,7 @@ ACPlayer::ACPlayer()
 	//RecalculateBaseEyeHeight();
 
 	PlayerInventory = CreateDefaultSubobject<UCInventoryComponent>(TEXT("PlayerInventory"));
+	PlayerEquipment = CreateDefaultSubobject<UCEquipmentComponent>(TEXT("PlayerEquipment"));
 	PlayerInventory->SetSlotsCapacity(20);
 	PlayerInventory->SetWeightCapacity(50.f);
 		
@@ -453,6 +454,37 @@ void ACPlayer::DropItem(UItemBase* ItemToDrop, const int32 QuanityToDrop)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item to drop was somhow null"));
+	}
+
+
+
+}
+
+void ACPlayer::MoveItemToEquipment(UItemBase* ItemToMove)
+{
+	//TODO: PlayerEquipment에서 해당 아이템 종류가 isvalid 인지 valid면 바꿔줄지 아니면 교체불가능하게할지 
+
+	if (!PlayerEquipment)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerEquipment is null"));
+	}
+	else if (!PlayerInventory->FindMathingItem(ItemToMove))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerInventory FindMaching Item is not null"));
+	}
+
+	if (PlayerInventory->FindMathingItem(ItemToMove) && PlayerEquipment)
+	{
+
+		
+		UItemBase* Item = PlayerInventory->FindMathingItem(ItemToMove);
+
+		PlayerEquipment->HandleAddItem(ItemToMove);
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item to Move was somehow null"));
 	}
 
 

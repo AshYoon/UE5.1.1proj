@@ -83,6 +83,9 @@ public:
 	UFUNCTION(Category = "Item")
 	FORCEINLINE bool IsFullItemStack() const { return Quanity == NumbericData.MaxStackSize; };
 
+	UFUNCTION(Category = "Item")
+		FORCEINLINE EItemType GetItemType() const { return ItemType; };
+
  
 
 

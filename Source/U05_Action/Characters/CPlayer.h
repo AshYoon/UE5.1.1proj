@@ -130,7 +130,7 @@ public:
 	void UpdateInteractionWidget() const;
 
 	void DropItem(UItemBase* ItemToDrop, const int32 QuanityToDrop);
-
+	void MoveItemToEquipment(UItemBase* ItemToMove);
 
 
 	// the players help Text

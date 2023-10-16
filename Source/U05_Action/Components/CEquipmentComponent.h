@@ -56,6 +56,7 @@ public:
 	FORCEINLINE TArray<UItemBase*> GetEquipmentContents() const { return EquipmentContents; };
 
 
+
 private:
 
 	//=========================================================================
@@ -91,5 +92,7 @@ protected:
 	void SwitchItem(UItemBase* ItemInput , UItemBase* ItemToRemove);
 
 	void ApplyStat();
+
+	void AddNewItem(UItemBase* Item);
 		
 };

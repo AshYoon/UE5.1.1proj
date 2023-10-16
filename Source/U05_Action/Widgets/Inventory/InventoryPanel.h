@@ -8,6 +8,8 @@
 
 class UInventoryItemSlot;
 class UCInventoryComponent;
+class UCEquipmentComponent;
+class UEquipmentSlot;
 class ACPlayer;
 class UTextBlock;
 class UWrapBox;
@@ -45,6 +47,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UInventoryItemSlot> InvnetorySlotClass;
+
+	UPROPERTY()
+	UCEquipmentComponent* EquipmentReference;
 
 
 

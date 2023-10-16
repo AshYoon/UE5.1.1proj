@@ -30,7 +30,22 @@ public:
 
 	/*make editor declare in C++ medatory to be in the bp or else it will not compile */
 	UPROPERTY(meta = (BindWidget))
-		UWrapBox* EquipmentWarpBox;
+		UWrapBox* EquipmentHeadWarpBox;
+
+	UPROPERTY(meta = (BindWidget))
+		UWrapBox* EquipmentWeaponWarpBox;
+
+	UPROPERTY(meta = (BindWidget))
+		UWrapBox* EquipmentNecklace;
+	
+	UPROPERTY(meta = (BindWidget))
+		UWrapBox* EquipmentTopWarpBox;
+
+	UPROPERTY(meta = (BindWidget))
+		UWrapBox* EquipmentLegWarpBox;
+
+	UPROPERTY(meta = (BindWidget))
+		UWrapBox* EquipmentFeetWarpBox;
 
 	UPROPERTY()
 		ACPlayer* PlayerCharacter;
@@ -42,6 +57,8 @@ public:
 		TSubclassOf<UEquipmentSlot> EquipmentSlotClass;
 
 protected:
+
+	void ClearWarpBox();
 
 	virtual void NativeOnInitialized() override;
 
