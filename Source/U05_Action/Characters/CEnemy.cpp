@@ -43,18 +43,23 @@ ACEnemy::ACEnemy()
 	// 이건 기본값 - 조정은 게임내에서 
 	//
 	TSubclassOf<UCUserWidget_Name> nameClass;
-	CHelpers::GetClass<UCUserWidget_Name>(&nameClass, "WidgetBlueprint'/Game/Widgets/WB_Name.WB_Name_C'");
+	CHelpers::GetClass<UCUserWidget_Name>(&nameClass, "WidgetBlueprint'/Game/WIdgets/WB_Name.WB_Name_C'");
 	NameWidget->SetWidgetClass(nameClass);
 	NameWidget->SetRelativeLocation(FVector(0, 0, 240));
 	NameWidget->SetDrawSize(FVector2D(240, 30));
 	NameWidget->SetWidgetSpace(EWidgetSpace::Screen);
-
+	
 	TSubclassOf<UCUserWidget_Health> healthClass;
-	CHelpers::GetClass<UCUserWidget_Health>(&healthClass, "WidgetBlueprint'/Game/Widgets/WB_Health.WB_Health_C'");
-	HealthWidget->SetWidgetClass(healthClass);
-	HealthWidget->SetRelativeLocation(FVector(0, 0, 190));
-	HealthWidget->SetDrawSize(FVector2D(120, 20));
-	HealthWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	CHelpers::GetClass<UCUserWidget_Health>(&healthClass, "WidgetBlueprint'/Game/WIdgets/WB_Health.WB_Health_C'");
+	if (healthClass)
+	{	
+		HealthWidget->SetWidgetClass(healthClass);
+		HealthWidget->SetRelativeLocation(FVector(0, 0, 190));
+		HealthWidget->SetDrawSize(FVector2D(120, 20));
+		HealthWidget->SetWidgetSpace(EWidgetSpace::Screen);
+
+	}
+
 
 
 

@@ -18,13 +18,16 @@ USTRUCT()
 struct FPlayerStat
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere)
+		/*player Stat Type */
+	UPROPERTY(VisibleAnywhere)
 	EStatTypes Type;
-
+	/*Player 의 현재 스탯 , 만약 Health라면 MaxHealth X 현재 Health */
 	UPROPERTY(EditAnywhere)
-	float StatDefaultValue;
-
+	float CurrentStatValue;
+	/* MaxHealth 역할 , 최대마나 최대스태미나 */
+	UPROPERTY(EditAnywhere)
+	float CurrentMaxStatValue;
+	/* 추가할 Stat value, Stat 계산할때는 이 Value를 추가해준다 */
 	UPROPERTY(EditAnywhere)
 	float ModifierValue;
 
@@ -65,14 +68,12 @@ private:
 		float Speed[(int32)ECharacterSpeed::Max] = { 200, 400, 600 };
 
 
-	UPROPERTY(EditDefaultsOnly, Category = "Health")
-		float MaxHealth = 100.f;
 
 
 
 public:
 	FORCEINLINE float GetMaxHealth() { return MaxHealth; }
-	FORCEINLINE float GetHealth() { return Health; }
+	FORCEINLINE float GetHealth() { return HealthStat.CurrentStatValue; }
 
 
 	FORCEINLINE float GetWalkSpeed() { return Speed[(int32)ECharacterSpeed::Walk]; }
@@ -86,6 +87,7 @@ public:
 	void SetMove();
 	void SetStop();
 
+	void AddStat(EStatTypes StatType , float InAmount);
 
 	void SetSpeed(ECharacterSpeed InType);
 
@@ -94,13 +96,17 @@ public:
 
 	void ApplyEquipmentStat();
 
-private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Health")
 	FPlayerStat HealthStat;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Health")
-	float Health = 100.f;
+	UPROPERTY(VisibleAnywhere, Category = "Health")
+	float MaxHealth ;
+
+
+private:
+
+
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float Damage = 20.f;
