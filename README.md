@@ -92,9 +92,22 @@ void ACPlayer::FootStep()
 		FootAudioComponent->Play(0.f);
 	}
 ````
+## CPickup 및 ItemInteraction 
+
+**설명**:  Player 와 Test Actor 를 Interface로 연결해서 해당 Actor에 상호작용할시에 해당 actor의 Interaction function을 불러옵니다 ,  
+
+또한 해당 액터와 상호작용하기위한 LineTrace는 해당 Character 의 GetPawnViewLocation 과 GetViewRotation 함수를 사용해서 
+카메라 기준이 아닌 해당 캐릭터의 머리 부분에서 LineTrace를 하도록 설정하고 , 
+벡터의 내적을 활용해서 캐릭터의 정면 Rotation을 기준으로 180도가 넘어가면 if 문을 넘어가지않게 만들었습니다
+ 
+Post prosses material 에 커스텀 머테리얼을 추가해서 해당 액터가 상호작용 가능할시에 해당 액터의 begin focus 함수와 end focus 함수에 
+
+mesh - set rendercustom depth 라는 렌더링 함수를 사용해서 해당 메시의 테두리 부분을 상호작용할수있게 만들었습니다
+
+### 관련 함수 혹은 코드
 
 [ItemInteraction시연영상](https://www.youtube.com/watch?v=HXcDLyzUIIc)
- 
+
 
 
 ````
@@ -162,11 +175,201 @@ void ACPlayer::PerformInteractionCheck()
 	NoInteractableFound();
 
 }
+
+
+
 ````
+
+## InventoryComponent
+**설명** : ActorComponent를 활용해서 제작한 Inventory 인비낟
+FItemAddResult 와 HandleAddItem 을 이용해서 최대한 아이템이 잘못들어가는일이 없도록 설정했으며 AddNewItem 을 통해 추가할때도 해당 객체가 복사된객체인지 아니면 필드에있는 pickup객체인지 확인하고 객체를 복사하여 
+Deep copy shallow copy에 대응해서 설계했습니다 , 또한 Stackableitem을 구분해서 인벤토리에 추가하기위해 Item의 ID를 람다식으로 비교하는 FindNextPartialStack으로 인벤토리내의 배열을 순회하여 MaxStackSize가 아닌 개체의 Quanity를 추가해줄수있습니다
+```cpp
+USTRUCT(BlueprintType)
+struct FItemAddResult
+{
+	GENERATED_BODY()
+
+	/*Initialize*/
+	FItemAddResult() :
+	ActualAmountAdded(0),
+	OperationResult(EItemAddResult::IAR_NoItemAdded),
+	ResultMessage(FText::GetEmpty())
+	{};
+
+
+
+	//Actual amount of item that was added to inventory 
+	UPROPERTY(BlueprintReadOnly , Category = "Item Add Result")
+	int32 ActualAmountAdded;
+	// Enum representing the end state of an add item operation
+	UPROPERTY(BlueprintReadOnly, Category = "Item Add Result")
+	EItemAddResult OperationResult;
+	/*ex) "inventory is full, information message that can be passed with the result  "*/
+	UPROPERTY(BlueprintReadOnly, Category = "Item Add Result")
+	FText ResultMessage;
+
+
+
+	/* we're gonna call this directly,so we make this with static*/
+	static FItemAddResult AddedNone(const FText& ErrorText)
+	{
+		FItemAddResult AddedNoneResult;
+
+		AddedNoneResult.ActualAmountAdded = 0;
+
+		AddedNoneResult.OperationResult = EItemAddResult::IAR_NoItemAdded;
+
+		AddedNoneResult.ResultMessage = ErrorText;
+
+		return AddedNoneResult;
+	};
+
+	static FItemAddResult AddedPartial(const int32 PartialAmountAdded, const FText& ErrorText)
+	{
+		FItemAddResult AddedPartialResult;
+
+		AddedPartialResult.ActualAmountAdded = PartialAmountAdded;
+
+		AddedPartialResult.OperationResult = EItemAddResult::IAR_PartialAmountItemAdded;
+
+		AddedPartialResult.ResultMessage = ErrorText;
+
+		return AddedPartialResult;
+	};
+
+	static FItemAddResult AddedAll(const int32 AmountAdded,const FText& Message)
+	{
+		FItemAddResult AddedAllResult;
+
+		AddedAllResult.ActualAmountAdded = AmountAdded;
+
+		AddedAllResult.OperationResult = EItemAddResult::IAR_AllItemAdded;
+
+		AddedAllResult.ResultMessage = Message;
+
+		return AddedAllResult;
+	};
+
+
+};
+
+FItemAddResult UCInventoryComponent::HandleAddItem(UItemBase * InputItem)
+{
+	if (GetOwner())
+	{
+			const int32 InitialRequestedAddAmount = InputItem->Quanity;
+
+			/*for nonStackable item */
+			if (!InputItem->NumbericData.bIsStackable)
+			{
+					return HandleNonStackableItem(InputItem );
+			}
+
+			// handle stackable 
+			const int32 StackableAmountAdded = HandleStackableItems(InputItem, InitialRequestedAddAmount);
+
+			if (StackableAmountAdded == InitialRequestedAddAmount)
+			{
+					// return add all result 
+				return FItemAddResult::AddedAll(InitialRequestedAddAmount, FText::Format(
+					FText::FromString("Successfully added {0} {1} to the inventory. "),
+					InitialRequestedAddAmount,
+					InputItem->ItemTextData.Name));
+			}
+
+			if (StackableAmountAdded < InitialRequestedAddAmount && StackableAmountAdded > 0)
+			{
+					// return added partial result 
+				return FItemAddResult::AddedPartial(StackableAmountAdded, FText::Format(
+					FText::FromString("Partial amount of {0} added to the inventory.Number added = {1} "),
+					InputItem->ItemTextData.Name,
+					StackableAmountAdded));
+			}
+
+			if (StackableAmountAdded <= 0)
+			{
+					//return added non result 
+				return FItemAddResult::AddedNone(FText::Format(
+					FText::FromString("Couldn't added {0} to the inventory.No remaining inventory slots , or invalid item."),
+					InputItem->ItemTextData.Name));
+			}
+	
+
+
+	}
+
+	return FItemAddResult();
+}
+
+
+void UCInventoryComponent::AddNewItem(UItemBase * Item, const int32 AmountToAdd)
+{
+	/* all the items are pointer , */
+
+	UItemBase* NewItem;
+
+	//some checks 
+	if (Item->bIsCopy || Item->bIsPickup)
+	{
+		/*이미 copy된아이템이거나 레벨에 배치되어있던 item이라면 해당 아이템은 이미 메모리에 참조되어있는 상태 */
+		/* if the item is already a copy , or is a world pickup */
+		NewItem = Item;
+		NewItem->ResetItemFlags();
+
+	}
+	else
+	{
+		// use when splitting or dragging to / from another inventory 
+		/*만약 다른경우라면 copy해도된다 */
+		NewItem = Item->CreateItemCopy();
+	}
+
+	NewItem->OwningInventory = this;
+	NewItem->SetQuanity(AmountToAdd);
+
+	InventoryContents.Add(NewItem);
+	
+	/* it could be stack */
+	InventoryTotalWeight += NewItem->GetItemStackWeight();
+	OnInventoryUpdated.Broadcast();
+
+}
+
+UItemBase * UCInventoryComponent::FindNextPartialStack(UItemBase * ItemIn) const
+{
+	/*find by predicate - checks with condition  */
+	/* 최대 stack이 아닌 아이템을 람다 함수를 사용해서 찾기 */
+		if (const TArray<TObjectPtr<UItemBase>>::ElementType* Result =
+			InventoryContents.FindByPredicate([&ItemIn](const UItemBase* InventoryItem)
+		{
+					/*this is not pointer compare , just item ID compare to check is this same item */
+			return InventoryItem->ID == ItemIn->ID && !InventoryItem->IsFullItemStack();
+			
+		}
+		))
+	{
+		return *Result;
+	}
+
+
+
+	return nullptr;
+
+
+}
+````
+
+
+
 
 ## CPlayer
 
 **설명**: DataTable의 Action Data 기반의 Battle Mode 
+
+[Action시연영상](https://www.youtube.com/watch?v=4v_8msfKJ_A)
+Unreal Engine C++ 에서 Action DataBase기반의 Action을 가져와서 
+해당 직업클래스의 Action을 취할수있게해줍니다 
 
 ### 관련 함수 혹은 코드
 
@@ -265,9 +468,7 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter, UCAction** OutAction)
 
 }
 ````
-[Action시연영상](https://www.youtube.com/watch?v=4v_8msfKJ_A)
-Unreal Engine C++ 에서 Action DataBase기반의 Action을 가져와서 
-해당 직업클래스의 Action을 취할수있게해줍니다 
+
 
 
 ## FeetComponent
