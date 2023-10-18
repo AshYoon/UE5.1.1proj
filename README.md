@@ -573,3 +573,108 @@ void UCFeetComponent::Trace(FName InSocket, float& OutDistance, FRotator& OutRot
 ````
 
 
+## Targeting Component 
+
+**설명**: ShpereTrace를 통해 근처의 Pawn을 받아내고 해당 타겟이 범위내에 존재한다면 시야각을 벗어나지않았을때 해당 객체 Targeting, change 를  통해 나를기준으로 가까운거리 , 혹은 Target을 기준으로 가까운거리 로 채인지한다 
+
+[TargetComponent 시연영상](https://www.youtube.com/watch?v=3kYQ9pD75po)
+
+
+### 관련 함수 혹은 코드
+```cpp
+void UCTargetComponent::SetTraceTargets()
+{
+	// 우리가 키를 누르면 대상이 검출이 되야한다 
+
+
+
+
+	FVector start = OwnerCharacter->GetActorLocation();
+	FVector end = FVector(start.X, start.Y, start.Z + 1);
+
+	TArray<AActor*> ignoreActors;
+	ignoreActors.Add(OwnerCharacter);
+
+	TArray<FHitResult> hitResults;
+	UKismetSystemLibrary::SphereTraceMultiByProfile(GetWorld(), start, end, TraceRadius, "Pawn", false, ignoreActors, Debug, hitResults, true, FLinearColor::Green, FLinearColor::Red, 1.0f);
+
+	for (const FHitResult& result : hitResults)
+	{
+		if (result.GetActor()->GetClass() == OwnerCharacter->GetClass())
+			continue;
+
+
+		ACharacter* character = Cast<ACharacter>(result.GetActor());
+
+		if (!!character)
+			TraceTargets.AddUnique(character);
+	}
+
+
+	for (const ACharacter* character : TraceTargets)
+		CLog::Print(character->GetName());
+
+
+
+}
+void UCTargetComponent::ChangeTarget(bool InRight)
+{
+	// 나를기준으로 가까운거리 , 혹은 Target을 기준으로 가까운거리 로 채인지한다 
+	// TMap으로 저장을 한다음에 그걸 Character 를 돌려서 Target위치 가져오고 좌우기준으로 구하기 
+	// 두 벡터에 수직인거 
+
+
+	CheckNull(Target); // 타겟이 있어야하고 
+
+	TMap<float, ACharacter*> map; // map 만들기 
+	for (ACharacter* character : TraceTargets)
+	{
+		if (Target == character)
+			continue; // 지금설정된 캐릭터는 제외 
+
+		FVector targetLocation = character->GetActorLocation();
+		FVector ownerLocation = OwnerCharacter->GetActorLocation();
+		FVector ownerToTarget = targetLocation - ownerLocation; // 우리로케이션에서 Target을 향하는 벡터 가 나온다 
+
+		FQuat quat = FQuat(OwnerCharacter->GetControlRotation()); // 쿼터니언 
+		FVector forward = quat.GetForwardVector(); // 전방벡터 구하기 
+		FVector up = quat.GetUpVector(); // 업벡터 
+
+		FVector cross = forward ^ ownerToTarget; // 내적 
+		float dot = cross | up; 
+
+		map.Add(dot, character); // 이걸 캐릭터마다 전부 저장 
+	}
+
+
+	float minimum = FLT_MAX; // 미니멈 수 
+	ACharacter* target = NULL; 
+
+	TArray<float> keys; // 거리 
+	map.GetKeys(keys); // key는 거리 value는 캐릭터 
+	for (float key : keys)
+	{
+		if (InRight == true)
+		{
+			if (key < 0.0f)
+				continue;
+		}
+		else
+		{
+			if (key > 0.0f)
+				continue;
+		}
+
+		if (FMath::Abs(key) > minimum) // 음수양수 상관없이 가까운에 
+			continue;
+
+		minimum = FMath::Abs(key); // 절대값 
+		target = *map.Find(key); // 해당 키 접근해서 character 구하기 
+	}
+
+	ChangeCursor(target); // 그 타겟으로 체인지 
+
+
+
+}
+````
