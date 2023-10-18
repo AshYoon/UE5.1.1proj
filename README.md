@@ -42,55 +42,54 @@ void ACPlayer::FootStep()
 	// Dungeon , Water , Soil , Rock , Snow , Wood ,Grass , Glass 
 
 	// nullcheck ? 
-	if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType1)
+switch (UGameplayStatics::GetSurfaceType(HitResult))
 	{
+	case::EPhysicalSurface::SurfaceType1:
 		CLog::Print("Dungeon", -1, 10.0f, FColor::Blue);
-
-		FootAudioComponent->SetIntParameter("foot", 0);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType2)
-	{
+			FootAudioComponent->SetIntParameter("foot", 0);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType2:
 		CLog::Print("Water", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 1);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType3)
-	{
+			FootAudioComponent->SetIntParameter("foot", 1);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType3:
 		CLog::Print("Soil", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 2);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType4)
-	{
+			FootAudioComponent->SetIntParameter("foot", 2);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType4:
 		CLog::Print("Rock", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 3);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType5)
-	{
+			FootAudioComponent->SetIntParameter("foot", 3);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType5:
 		CLog::Print("Snow", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 4);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType6)
-	{
+			FootAudioComponent->SetIntParameter("foot", 4);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType6:
 		CLog::Print("Wood", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 5);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType7)
-	{
+			FootAudioComponent->SetIntParameter("foot", 5);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType7:
 		CLog::Print("Grass", -1, 10.0f, FColor::Blue);
-		FootAudioComponent->SetIntParameter("foot", 6);
-		FootAudioComponent->Play(0.f);
-	}
-	else if (UGameplayStatics::GetSurfaceType(HitResult) == EPhysicalSurface::SurfaceType7)
-	{
-		CLog::Print("Glass", -1, 10.0f, FColor::Blue);
+			FootAudioComponent->SetIntParameter("foot", 6);
+			FootAudioComponent->Play(0.f);
+			break;
+	case::EPhysicalSurface::SurfaceType8:
+		CLog::Print("Grass", -1, 10.0f, FColor::Blue);
 		FootAudioComponent->SetIntParameter("foot", 7);
 		FootAudioComponent->Play(0.f);
+		break;
+
+		default:
+			CLog::Print("NOSurface?", -1, 10.0f, FColor::Blue);
+			break;
 	}
+
 ````
 ## CPickup 및 ItemInteraction 
 
