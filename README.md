@@ -473,7 +473,7 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter, UCAction** OutAction)
 ## FeetComponent
 
 **설명**: LineTrace와 기울기를 구해서 IK 구현 
-[IK시연영상](https://www.youtube.com/watch?v=LrjqitSjbw)
+[IK시연영상](https://www.youtube.com/watch?v=-LrjqitSjbw)
 ### 관련 함수 혹은 코드
 ```cpp
 void UCFeetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
