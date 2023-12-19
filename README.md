@@ -180,7 +180,7 @@ void ACPlayer::PerformInteractionCheck()
 ````
 
 ## InventoryComponent
-**설명** : ActorComponent를 활용해서 제작한 Inventory 인비낟
+**설명** : ActorComponent를 활용해서 제작한 Inventory 입니다
 FItemAddResult 와 HandleAddItem 을 이용해서 최대한 아이템이 잘못들어가는일이 없도록 설정했으며 AddNewItem 을 통해 추가할때도 해당 객체가 복사된객체인지 아니면 필드에있는 pickup객체인지 확인하고 객체를 복사하여 
 Deep copy shallow copy에 대응해서 설계했습니다 , 또한 Stackableitem을 구분해서 인벤토리에 추가하기위해 Item의 ID를 람다식으로 비교하는 FindNextPartialStack으로 인벤토리내의 배열을 순회하여 MaxStackSize가 아닌 개체의 Quanity를 추가해줄수있습니다
 ```cpp
